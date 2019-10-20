@@ -32,18 +32,5 @@ class Solution:
 
         # Convert back to int.
         rev_x = int(rev_x_str)
+
         return rev_x
-
-
-
-
-
-
-
-
-
-
-
-
-
-#
