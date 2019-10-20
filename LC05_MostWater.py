@@ -31,4 +31,7 @@ class Solution:
                     max_water = water_area
         return max_water
 
+
+# exceeded time limit on Leetcode. Running in O(n^2) time currently.
+
 # Need to review section in Algorithms book about evaluating combinations of items in a list.

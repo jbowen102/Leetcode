@@ -54,57 +54,52 @@ Example 5:
 class Solution:
     # def intToRoman(self, num: int) -> str:
     def intToRoman(self, num):
-        if num > 1000 and num < 4000:
-            roman = 'M' * num/1000
-            return roman + Solution.intToRoman(num - num/1000)
+        # print(type(num))
+        if num >= 1000 and num < 4000:
+            roman = 'M' * int(num/1000)
+            return roman + self.intToRoman(num - 1000*int(num/1000))
         elif num >= 900:
             roman = 'CM'
-            return roman + Solution.intToRoman(num - 900)
+            return roman + self.intToRoman(num - 900)
         elif num >= 500:
             roman = 'D'
-            return roman + Solution.intToRoman(num - 500)
+            return roman + self.intToRoman(num - 500)
         elif num >= 400:
             roman = 'CD'
-            return roman + Solution.intToRoman(num - 400)
+            return roman + self.intToRoman(num - 400)
         elif num >= 100:
-            roman = 'C' * num/100
-            return roman + Solution.intToRoman(num - num/100)
+            roman = 'C' * int(num/100)
+            return roman + self.intToRoman(num - 100*int(num/100))
         elif num >= 90:
             roman = 'XC'
-            return roman + Solution.intToRoman(num - 90)
+            return roman + self.intToRoman(num - 90)
         elif num >= 50:
             roman = 'L'
-            return roman + Solution.intToRoman(num - 50)
+            return roman + self.intToRoman(num - 50)
         elif num >= 40:
             roman = 'XL'
-            return roman + Solution.intToRoman(num - 40)
+            return roman + self.intToRoman(num - 40)
         elif num >= 10:
-            roman >= 'X' * num/10
-            return roman + Solution.intToRoman(num - num/10)
+            roman = 'X' * int(num/10)
+            return roman + self.intToRoman(num - 10*int(num/10))
 
 
-
-        elif num == 0:
-            roman = ''
+        elif num == 9:
+            roman = 'IX'
             return roman
-        elif num > 1 and num < 4:
-            roman = 'I'*num
+        elif num > 4:
+            roman = 'V' + 'I'*(num-5)
             return roman
         elif num == 4:
             roman = 'IV'
             return roman
-        elif num > 4 and num < 9:
-            roman = 'V' + 'I'*(num-5)
+        elif num >= 1:
+            roman = 'I'*num
             return roman
-        elif num == 9:
-            roman = 'IX'
+        elif num == 0:
+            roman = ''
             return roman
-        elif num > 9:
-            roman = 'X'
-            return roman + Solution.intToRoman()
 
 
-
-
-
-        #
+# Submitted
+# 60ms on Leetcode.
