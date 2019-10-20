@@ -33,4 +33,9 @@ class Solution:
         # Convert back to int.
         rev_x = int(rev_x_str)
 
-        return rev_x
+        if rev_x < -2**31 or rev_x > 2**31-1:
+            return 0
+        else:
+            return rev_x
+
+# Successfully submitted.
