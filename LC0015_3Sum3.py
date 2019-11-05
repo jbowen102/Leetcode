@@ -18,7 +18,10 @@ A solution set is:
 class Solution:
     # def threeSum(self, nums: List[int]) -> List[List[int]]:
     def threeSum(self, nums):
+
         soln_triples = []
+        soln_triples_dict = {}
+
         for i, first in enumerate(nums):
             print(str(i) + '_' + str(first))
             for j, second in enumerate(nums[i+1:]):
@@ -26,13 +29,14 @@ class Solution:
                 for k, third in enumerate(nums[i+1:][j+1:]):
                     print('\t\t' + str(i) + '_' + str(third))
                     if first+second+third == 0:
-                        soln_triples.append([first, second, third])
+                        triple = sorted((first, second, third))
+                        # sort each triplet, then add each to a hash table.
+                        # Don't store if a duplicate triple already exists.
+                        if not soln_triples_dict.get(triple):
+                            soln_triples.append(list(myt))
+                            soln_triples_dict[triple] = True
         return soln_triples
 
-    # Right now it is repeating triples on test case [-1, 0, 1, 2, -1, -4]
-    # Returns this: [[-1, 0, 1], [-1, 2, -1], [0, 1, -1]]
-
-    # Traverse list once and delete duplicates
 
     # Check that no triples are repeated.
     # Naive implementation - n^3 complexity.

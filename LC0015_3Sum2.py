@@ -18,6 +18,25 @@ A solution set is:
 class Solution:
     # def threeSum(self, nums: List[int]) -> List[List[int]]:
     def threeSum(self, nums):
+
+        # pre-process input list to eliminate duplicate entries.
+        # create hash table at the same time
+        num_dict = {}
+        nums_no_dup = []
+        for num in nums:
+            if num_dict.get(num):
+                # do nothing if the num is already there.
+                continue
+            else:
+                # add to hash table and new list only if unique.
+                num_dict[num] = num
+                nums_no_dup += [num]
+
+        # Store as nums again for simplicity.
+        nums = nums_no_dup.copy()
+        print(nums)
+
+
         soln_triples = []
         for i, first in enumerate(nums):
             print(str(i) + '_' + str(first))
@@ -29,10 +48,13 @@ class Solution:
                         soln_triples.append([first, second, third])
         return soln_triples
 
-    # Right now it is repeating triples on test case [-1, 0, 1, 2, -1, -4]
-    # Returns this: [[-1, 0, 1], [-1, 2, -1], [0, 1, -1]]
+    # Traverse list once and delete duplicate numbers to preclude duplicate
+    # triplets and shorten processing time.
 
-    # Traverse list once and delete duplicates
+    # This didn't work because some triplets require duplicate numbers to exist
+    # in list, like [-1, -1, 2].
+
+
 
     # Check that no triples are repeated.
     # Naive implementation - n^3 complexity.
