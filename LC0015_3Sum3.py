@@ -23,21 +23,20 @@ class Solution:
         soln_triples_dict = {}
 
         for i, first in enumerate(nums):
-            print(str(i) + '_' + str(first))
+            # print(str(i) + '_' + str(first))
             for j, second in enumerate(nums[i+1:]):
-                print('\t' + str(j) + '_' + str(second))
+                # print('\t' + str(j) + '_' + str(second))
                 for k, third in enumerate(nums[i+1:][j+1:]):
-                    print('\t\t' + str(i) + '_' + str(third))
+                    # print('\t\t' + str(i) + '_' + str(third))
                     if first+second+third == 0:
-                        triple = sorted((first, second, third))
+                        triple = tuple(sorted([first, second, third]))
                         # sort each triplet, then add each to a hash table.
                         # Don't store if a duplicate triple already exists.
                         if not soln_triples_dict.get(triple):
-                            soln_triples.append(list(myt))
+                            soln_triples.append(list(triple))
                             soln_triples_dict[triple] = True
         return soln_triples
 
 
-    # Check that no triples are repeated.
     # Naive implementation - n^3 complexity.
-    # Do another solution with hash table(s)
+    # Won't pass all test cases on Leetcode because of time limit exceeded.
