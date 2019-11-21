@@ -13,12 +13,13 @@ The sum that is closest to the target is 2. (-1 + 2 + 1 = 2).
 class Solution:
     # def threeSumClosest(self, nums: List[int], target: int) -> int:
     def threeSumClosest(self, nums, target):
-        for i, num in enumerate(nums):
-            target2 = target - num
 
+        for i, num in enumerate(nums):
             nums2 = nums.copy()
             nums2.remove(num)
-            other_two = twosum(nums2, target2)
+
+            other_two = twoSum(nums2, target - num)
+
             if other_two:
                 j = other_two[0]
                 k = other_two[1]
@@ -26,10 +27,14 @@ class Solution:
                 # need to return the sum instead.
 
     # Taken from TwoSum3 then revised:
-    def twosum(nums, target):
+    def twoSum(nums_in, target):
         hash_map = dict()
 
-        for i, num in enumerate(nums):
+        # Initialize a best match and try to beat it with every iteration's pair.
+        closest_sum = None
+
+        for i, num in enumerate(nums_in):
+
             complement = target - num
             if num in hash_map:
                 return [hash_map[num], i]
@@ -38,3 +43,6 @@ class Solution:
                 hash_map[complement] = i
             else:
                 continue
+
+
+# abandoned. Can't use same approach as exact algorithm.
