@@ -27,6 +27,10 @@ class Solution:
         # No guarantee they are the same length.
         # Is it important that the input lists are already sorted?
 
+
+    # refactor to test if vals are present instead of next
+
+
         if l1.next and l2.next:
             n1 = ListNode(l1.val)
             n2 = ListNode(l2.val)
