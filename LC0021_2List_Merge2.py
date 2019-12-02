@@ -28,40 +28,37 @@ class Solution:
         # Is it important that the input lists are already sorted?
 
 
-    # refactor to test if vals are present instead of next
+        if not l1 and not l2:
+            # base case
+            return None
 
-
-        if l1.next and l2.next:
-            n1 = ListNode(l1.val)
-            n2 = ListNode(l2.val)
-
-            n1.next = n2
-            n2.next = self.mergeTwoLists(l1.next, l2.next)
-            return n1
-
-        if l1.next and not l2.next:
+        if l1 and not l2:
             # quasi-base case
-            l2.next = l1.next
-            l1.next = l2
             return l1
 
-        if l2.next and not l1.next:
+        if l2 and not l1:
             # quasi-base case
-            l1.next = l2
-            return l1
+            return l2
 
         else:
-            # base case
-            l1.next = l2
-            return l1
+            if l1.val <= l2.val:
+                l1.next = self.mergeTwoLists(l1.next, l2)
+                return l1
+            else:
+                l2.next = self.mergeTwoLists(l1, l2.next)
+                return l2
 
 
-
-# fails on [], [] input.
-
-
+# fails on [5], [1, 2, 4] input.
 
 # test
+# node1 = ListNode(1)
+# node2 = ListNode(2)
+# node4 = ListNode(4)
+# node5 = ListNode(5)
+# node1.next = node2
+# node2.next = node4
+
 # mynode1 = ListNode(1)
 # mynode3 = ListNode(3)
 # mynode5 = ListNode(5)
@@ -74,7 +71,7 @@ class Solution:
 # node2.next = node4
 # node4.next = node6
 
-
+#
 # mynode1 = ListNode(1)
 # mynode3 = ListNode(3)
 # mynode5 = ListNode(5)
@@ -100,7 +97,7 @@ class Solution:
 # node2 = ListNode(2)
 # node4 = ListNode(4)
 # node6 = ListNode(6)
-# # node8 = ListNode(8)
+# node8 = ListNode(8)
 # node2.next = node4
 # node4.next = node6
-# # node6.next = node8
+# node6.next = node8
