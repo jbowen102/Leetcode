@@ -49,7 +49,102 @@ Note:
 
 """
 
-class Solution:
-    def isValidSudoku(self, board: List[List[str]]) -> bool:
+class SudokuUnit:
+    def __init__(self):
+        self.entries = {}
 
-        
+    def fill_num(self, num):
+        if self.entries.get(num):
+            return False
+        else:
+            self.entries[num] = True
+            return True
+
+class Row(SudokuUnit):
+    pass
+
+class Block(SudokuUnit):
+    pass
+
+
+class Solution:
+    # def isValidSudoku(self, board: List[List[str]]) -> bool:
+    def isValidSudoku(self, board):
+
+        # initialize objects to store each row and each block.
+        # while reading in board, populate objects, and if repitition found within
+        # a row or block, return False immediately.
+
+        BlockTL = Block()
+        BlockTM = Block()
+        BlockTR = Block()
+        BlockCL = Block()
+        BlockCM = Block()
+        BlockCR = Block()
+        BlockBL = Block()
+        BlockBM = Block()
+        BlockBR = Block()
+
+        Row1 = Row()
+        Row2 = Row()
+        Row3 = Row()
+        Row4 = Row()
+        Row5 = Row()
+        Row6 = Row()
+        Row7 = Row()
+        Row8 = Row()
+        Row9 = Row()
+
+        for row in board[:3]:
+            for num in row[:3]:
+                # add to both row object and top left block object
+                Row1.fill_num(num)
+                BlockTL.fill_num(num)
+
+            for num in row[3:6]:
+                # add to both row object and top middle block object
+                Row2.fill_num(num)
+                BlockTM.fill_num(num)
+
+            for num in row[6:9]:
+                # add to both row object and top right block object
+                Row3.fill_num(num)
+                BlockTR.fill_num(num)
+
+        for row in board[3:6]:
+            for num in row[:3]:
+            # for cols 1-3:
+                # add to both row object and center left block object
+                Row4.fill_num(num)
+                BlockCL.fill_num(num)
+
+            for num in row[3:6]:
+            # for cols 4-6:
+                # add to both row object and center middle block object
+                Row5.fill_num(num)
+                BlockCM.fill_num(num)
+
+            for num in row[6:9]:
+            # for cols 7-9:
+                # add to both row object and center right block object
+                Row6.fill_num(num)
+                BlockCR.fill_num(num)
+
+        for row in board[6:9]:
+            for num in row[:3]:
+            # for cols 1-3:
+                # add to both row object and bot left block object
+                Row7.fill_num(num)
+                BlockBL.fill_num(num)
+
+            for num in row[3:6]:
+            # for cols 4-6:
+                # add to both row object and bot middle block object
+                Row8.fill_num(num)
+                BlockBM.fill_num(num)
+
+            for num in row[6:9]:
+            # for cols 7-9:
+                # add to both row object and bot right block object
+                Row9.fill_num(num)
+                BlockBR.fill_num(num)
