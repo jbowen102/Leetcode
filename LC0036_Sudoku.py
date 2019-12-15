@@ -49,25 +49,78 @@ Note:
 
 """
 
+# Check for number that isn't between 1 and 9.
+
+
 class SudokuUnit:
     def __init__(self):
         self.entries = {}
 
     def fill_num(self, num):
         if self.entries.get(num):
-            return False
+            return True
         else:
             self.entries[num] = True
-            return True
+            return False
 
 class Row(SudokuUnit):
+    pass
+
+class Col(SudokuUnit):
     pass
 
 class Block(SudokuUnit):
     pass
 
+# class SudokuBoard():
+#     def __init__
 
-class Solution:
+class FullBoard():
+    def __init__(self):
+        self.all_rows = {}
+        self.all_cols = {}
+        self.all_blocks = {}
+        for x in range(9):
+            self.all_rows[x] = Row()
+            self.all_cols[x] = Col()
+            self.all_blocks[x] = Block()
+
+    def get_row(self, row_num):
+        return self.all_rows.get(row_num)
+
+    def get_col(self, col_num):
+        return self.all_cols.get(col_num)
+
+    def get_block(self, row_num, col_num):
+        block_num = 3 * int(row_num / 3) + int(col_num / 3)
+        return self.all_blocks.get(block_num)
+
+    def add_val(self, row_num, col_num, str_value):
+        if str_value == '.':
+            # Handle blanks on the board.
+            return False
+        else:
+            value = int(str_value)
+
+        Row = self.get_row(row_num)
+        filled = Row.fill_num(value)
+        if filled:
+            return True
+
+        Col = self.get_col(col_num)
+        filled = Col.fill_num(value)
+        if filled:
+            return True
+
+        Block = self.get_block(row_num, col_num)
+        filled = Block.fill_num(value)
+        if filled:
+            return True
+
+        return False
+
+
+class Solution():
     # def isValidSudoku(self, board: List[List[str]]) -> bool:
     def isValidSudoku(self, board):
 
@@ -75,76 +128,100 @@ class Solution:
         # while reading in board, populate objects, and if repitition found within
         # a row or block, return False immediately.
 
-        BlockTL = Block()
-        BlockTM = Block()
-        BlockTR = Block()
-        BlockCL = Block()
-        BlockCM = Block()
-        BlockCR = Block()
-        BlockBL = Block()
-        BlockBM = Block()
-        BlockBR = Block()
+        Board = FullBoard()
 
-        Row1 = Row()
-        Row2 = Row()
-        Row3 = Row()
-        Row4 = Row()
-        Row5 = Row()
-        Row6 = Row()
-        Row7 = Row()
-        Row8 = Row()
-        Row9 = Row()
+        for row_num, row in enumerate(board):
+            for entry_num, str_value in enumerate(row):
+                conflict = Board.add_val(row_num, entry_num, str_value)
+                if conflict:
+                    return False
 
-        for row in board[:3]:
-            for num in row[:3]:
-                # add to both row object and top left block object
-                Row1.fill_num(num)
-                BlockTL.fill_num(num)
+        return True
 
-            for num in row[3:6]:
-                # add to both row object and top middle block object
-                Row2.fill_num(num)
-                BlockTM.fill_num(num)
 
-            for num in row[6:9]:
-                # add to both row object and top right block object
-                Row3.fill_num(num)
-                BlockTR.fill_num(num)
+input_board_good = [
+  ["5","3",".",".","7",".",".",".","."],
+  ["6",".",".","1","9","5",".",".","."],
+  [".","9","8",".",".",".",".","6","."],
+  ["8",".",".",".","6",".",".",".","3"],
+  ["4",".",".","8",".","3",".",".","1"],
+  ["7",".",".",".","2",".",".",".","6"],
+  [".","6",".",".",".",".","2","8","."],
+  [".",".",".","4","1","9",".",".","5"],
+  [".",".",".",".","8",".",".","7","9"]
+]
 
-        for row in board[3:6]:
-            for num in row[:3]:
-            # for cols 1-3:
-                # add to both row object and center left block object
-                Row4.fill_num(num)
-                BlockCL.fill_num(num)
+input_board_bad = [
+  ["8","3",".",".","7",".",".",".","."],
+  ["6",".",".","1","9","5",".",".","."],
+  [".","9","8",".",".",".",".","6","."],
+  ["8",".",".",".","6",".",".",".","3"],
+  ["4",".",".","8",".","3",".",".","1"],
+  ["7",".",".",".","2",".",".",".","6"],
+  [".","6",".",".",".",".","2","8","."],
+  [".",".",".","4","1","9",".",".","5"],
+  [".",".",".",".","8",".",".","7","9"]
+]
 
-            for num in row[3:6]:
-            # for cols 4-6:
-                # add to both row object and center middle block object
-                Row5.fill_num(num)
-                BlockCM.fill_num(num)
+input_board_bad2 = [
+  ["1","3",".",".","7",".",".",".","1"],
+  ["6",".",".","1","9","5",".",".","."],
+  [".","9","8",".",".",".",".","6","."],
+  ["8",".",".",".","6",".",".",".","3"],
+  ["4",".",".","8",".","3",".",".","1"],
+  ["7",".",".",".","2",".",".",".","6"],
+  [".","6",".",".",".",".","2","8","."],
+  [".",".",".","4","1","9",".",".","5"],
+  [".",".",".",".","8",".",".","7","9"]
+]
 
-            for num in row[6:9]:
-            # for cols 7-9:
-                # add to both row object and center right block object
-                Row6.fill_num(num)
-                BlockCR.fill_num(num)
 
-        for row in board[6:9]:
-            for num in row[:3]:
-            # for cols 1-3:
-                # add to both row object and bot left block object
-                Row7.fill_num(num)
-                BlockBL.fill_num(num)
+input_board_bad3 = [
+  ["5","3",".",".","7",".",".",".","."],
+  ["6",".",".","1","9","5",".",".","."],
+  [".","9","8",".",".",".",".","6","."],
+  ["8",".",".",".","6",".",".",".","3"],
+  ["4",".",".","8",".","3",".",".","1"],
+  ["7",".",".",".","2",".",".",".","6"],
+  [".","6",".",".",".",".","2","8","."],
+  [".",".",".","4","1","9",".",".","5"],
+  ["5",".",".",".","8",".",".","7","9"]
+]
 
-            for num in row[3:6]:
-            # for cols 4-6:
-                # add to both row object and bot middle block object
-                Row8.fill_num(num)
-                BlockBM.fill_num(num)
+input_board_bad4 = [
+  ["5","3",".",".","7",".",".",".","."],
+  ["6",".","5","1","9","5",".",".","."],
+  [".","9","8",".",".",".",".","6","."],
+  ["8",".",".",".","6",".",".",".","3"],
+  ["4",".",".","8",".","3",".",".","1"],
+  ["7",".",".",".","2",".",".",".","6"],
+  [".","6",".",".",".",".","2","8","."],
+  [".",".",".","4","1","9",".",".","5"],
+  [".",".",".",".","8",".",".","7","9"]
+]
 
-            for num in row[6:9]:
-            # for cols 7-9:
-                # add to both row object and bot right block object
-                Row9.fill_num(num)
-                BlockBR.fill_num(num)
+input_board_bad5 = [
+  ["5","3",".",".","7",".",".",".","."],
+  ["6",".",".","1","9","5",".",".","."],
+  [".","9","8",".",".",".",".","6","."],
+  ["8",".",".",".","6",".",".",".","3"],
+  ["4",".",".","8",".","3",".",".","1"],
+  ["7",".",".",".","2",".",".",".","6"],
+  [".","6",".",".",".",".","2","8","."],
+  [".",".",".","4","1","9",".",".","5"],
+  [".",".",".",".","8",".","8","7","9"]
+]
+
+input_board_bad6 = [
+  ["5","3",".",".","7",".",".",".","."],
+  ["6",".",".","1","9","5",".",".","."],
+  [".","9","8",".",".",".",".","6","."],
+  ["8",".",".",".","6",".",".",".","3"],
+  ["4",".",".","8",".","3",".",".","1"],
+  ["7",".",".",".","2",".",".",".","6"],
+  [".","6",".",".",".",".","2","8","."],
+  [".",".",".","4","1","9",".",".","5"],
+  [".",".","6",".","8",".",".","7","9"]
+]
+
+# Accepted on first submission. Faster than 82.6%. Less mem than 100%.
