@@ -31,16 +31,33 @@ class Solution:
 
     # First program just removes second to last node.
     def removeNthFromEnd(self, head, n):
-        if not head.next:
+        nodelist = []
+
+        # add all nodes to a list so their position can be indexed.
+        current_node = head
+        while current_node:
+            nodelist.append(current_node)
+            current_node = current_node.next
+
+
+        if len(nodelist) < n:
+            # includes empty list
             return head
-        elif not head.next.next:
+        elif len(nodelist) == n:
             return head.next
-        elif not head.next.next.next:
-            head.next = head.next.next
+        elif n < 2:
+            nodelist[-2].next = None
             return head
         else:
-            head.next = self.removeNthFromEnd(head.next, n)
-            return head
+            pos_to_remove = len(nodelist) - n
+            node_to_remove = nodelist[pos_to_remove]
+
+            node_to_modify = nodelist[pos_to_remove - 1]
+            new_next_node = nodelist[pos_to_remove + 1]
+
+            node_to_modify.next = new_next_node
+
+            return nodelist[0]
 
 
 # tests
@@ -56,6 +73,11 @@ node6.next = node8
 print(node2)
 
 mysol = Solution()
-new_list = mysol.removeNthFromEnd(node2, 2)
+new_list = mysol.removeNthFromEnd(node2, 5)
+# new_list = mysol.removeNthFromEnd(node2, 4)
+# new_list = mysol.removeNthFromEnd(node2, 3)
+# new_list = mysol.removeNthFromEnd(node2, 2)
+# new_list = mysol.removeNthFromEnd(node2, 1)
+# new_list = mysol.removeNthFromEnd(node2, 0)
 
 print(new_list)
