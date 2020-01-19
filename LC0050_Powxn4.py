@@ -22,5 +22,32 @@ Note:
 
 class Solution:
     # def myPow(self, x: float, n: int) -> float:
+
     def myPow(self, x, n):
-        return x**n
+        if n == 0:
+            return 1
+        elif n < 1:
+            return self.myPowIter(1/x, -n, 1)
+        else:
+            return self.myPowIter(x, n, 1)
+
+    def myPowIter(self, x, n, product):
+        while n > 0:
+            product *= x
+            n -= 1
+        return product
+
+
+# using iteration only.
+
+# tests
+mysol = Solution()
+
+x = 1.00001
+n = 123456
+print(mysol.myPow(x, n))
+# passes this now
+
+# fails this case (time limit):
+x = 0.00001
+n = 2147483647

@@ -23,4 +23,25 @@ Note:
 class Solution:
     # def myPow(self, x: float, n: int) -> float:
     def myPow(self, x, n):
-        return x**n
+        if n == 0:
+            return 1
+        elif n == 1:
+            return x
+        elif n < 1:
+            return 1 / self.myPow(x, -n)
+        elif (n % 2) == 0:
+            return self.myPow(x*x, n/2)
+        elif (n % 2) == 1:
+            return x * self.myPow(x, n-1)
+
+
+
+# back to using recusion, but now faster because exponent gets divided.
+
+# tests
+mysol = Solution()
+
+x = 0.00001
+n = 2147483647
+print(mysol.myPow(x, n))
+# passed

@@ -23,4 +23,24 @@ Note:
 class Solution:
     # def myPow(self, x: float, n: int) -> float:
     def myPow(self, x, n):
-        return x**n
+        if n == 0:
+            return 1
+        elif n == 1:
+            return x
+        elif n < 1:
+            return 1 / self.myPow(x, -n)
+        else:
+            return x * self.myPow(x, n-1)
+
+
+
+# tests
+mysol = Solution()
+
+x = 2.10000
+n = 3
+print(mysol.myPow(x, n))
+
+# failed this case:
+x = 1.00001
+n = 123456
