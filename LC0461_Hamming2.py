@@ -63,11 +63,6 @@ class Solution:
         else:
             return output
 
-# Failed on inputs:
-# x = 1577962638
-# y = 1727613287
-# Thought upper limit was 231, not 2^31 because of formatting not preserving.
-
 # test
 mysol = Solution()
 print(mysol.hammingDistance(1, 4))
@@ -89,3 +84,9 @@ print(mysol.hammingDistance(1, 231))
 # print(mysol.dec_to_binary(4))
 # print(mysol.dec_to_binary(1))
 # print(mysol.dec_to_binary(0))
+
+
+
+# Failed on inputs:
+# x = 1577962638
+# y = 1727613287
