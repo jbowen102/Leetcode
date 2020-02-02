@@ -27,3 +27,37 @@ Example 2:
     its moves.
 
 """
+
+class Solution:
+    # def judgeCircle(self, moves: str) -> bool:
+
+    def __init__(self):
+        self.reset()
+
+    def reset(self):
+        self.vertical = 0
+        self.horizontal = 0
+
+    def judgeCircle(self, moves):
+        for move in moves:
+            if move == 'U':
+                self.vertical += 1
+            elif move == 'D':
+                self.vertical -= 1
+            elif move == 'R':
+                self.horizontal += 1
+            elif move == 'L':
+                self.horizontal -= 1
+            else:
+                print("Bad character")
+                return False
+        if self.vertical == 0 and self.horizontal == 0:
+            self.reset()
+            return True
+        else:
+            self.reset()
+            return False
+
+# test
+mysol = Solution()
+print(mysol.judgeCircle('UDLRRRRLLLUDUDUDLRRRRLLLUDUDUDLRRRRLLLUDUDUDLRRRRLLLUDUDUDLRRRRLLLUDUDL'))
