@@ -34,20 +34,60 @@ Note:
 
 class SudokuUnit:
     def __init__(self):
-        # https://docs.python.org/3/tutorial/datastructures.html#sets
-        self.potentials = set("123456789")
-        # self.potentials = dict([("1", 0), ("2", 0), ("3", 0), ("4", 0), ("5", 0), 
-        #                         ("6", 0), ("7", 0), ("8", 0), ("9", 0)])
+
         self.Cells = []
+
+        # https://docs.python.org/3/tutorial/datastructures.html#sets
+        # self.potentials = set("123456789")
+        # self.potentials = dict([("1", set()), ("2", set()),
+        #                         ("3", set()), ("4", set()),
+        #                         ("5", set()), ("6", set()),
+        #                         ("7", set()), ("8", set()),
+        #                         ("9", set())])
+        self.potentials = dict()
+        # Will have to test potentials differently. Instead of looking for their
+        # presence, need to look at value.
+        # Probably not initialized correctly here. Initialize empty and add only
+        # the values needed as self.add_cell() is called.
 
     def add_cell(self, Cell):
         self.Cells.append(Cell)
 
-    def get_potentials(self):
-        return self.potentials
+        # add new Cell to self.potentials in the appropriate values' set.
+        for pot in Cell.get_potentials():
+            if pot in self.potentials:
+                self.potentials[pot].update(Cell)
+            else:
+                self.potentials[pot] = set(Cell)
 
-    def update_potentials(self, val_to_remove):
-        self.potentials = self.potentials - set(val_to_remove)
+    def get_potentials(self):
+        # return self.potentials
+
+        # return dict keys as a set
+        return set(self.potentials.keys())
+
+    def remove_cell_mem(self, Cell):
+
+        for pot_val in self.potentials:
+            if Cell in self.potentials[pot_val]:
+                self.potentials[pot_val].discard(Cell)
+                if len(self.potentials[pot_val]) == 1:
+                    # propagate value update
+                    Cell.set_val(pot_val)
+                elif len(self.potentials[pot_val]) == 0:
+                    # bad guess somewhere
+                    # how to indicate a bad DFS branch?
+                    # need it here and where else?
+                    pass
+
+    def update_potentials(self, val_to_remove, Cell):
+        # self.potentials = self.potentials - set(val_to_remove)
+
+        del self.potentials[val_to_remove]
+
+        # need to remove cell's membership in any other potential sets as well.
+        self.remove_cell_mem(Cell)
+        # is anything else needed to propagate?
 
         # update children w/ new potentials.
         for Cell in self.Cells:
@@ -94,13 +134,18 @@ class Cell():
 
         # update parents
         for Parent in self.Parents:
-            Parent.update_potentials(self.value)
+            Parent.update_potentials(self.value, self)
+
+    def get_potentials(self):
+        return self.potentials
 
     def update_potentials(self, val_to_remove):
         # cell may not have val_to_remove in its potentials due to ruling out
         # by a different parent.
         if val_to_remove in self.potentials:
             self.potentials = self.potentials - set(val_to_remove)
+
+            # Need to update parents w/ removal of this cell's potential.
 
             if len(self.potentials) == 1:
                 # When there's only one possible num left, give cell this val.
