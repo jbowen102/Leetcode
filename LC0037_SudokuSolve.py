@@ -1,11 +1,12 @@
 """
-Determine if a 9x9 Sudoku board is valid. Only the filled cells need to be
-validated according to the following rules:
-    Each row must contain the digits 1-9 without repetition.
-    Each column must contain the digits 1-9 without repetition.
-    Each of the 9 3x3 sub-boxes of the grid must contain the digits 1-9 without repetition.
+Write a program to solve a Sudoku puzzle by filling the empty cells.
 
-The Sudoku board could be partially filled, where empty cells are filled with the character '.'.
+A sudoku solution must satisfy all of the following rules:
+
+Each of the digits 1-9 must occur exactly once in each row.
+Each of the digits 1-9 must occur exactly once in each column.
+Each of the the digits 1-9 must occur exactly once in each of the 9 3x3 sub-boxes of the grid.
+Empty cells are indicated by the character '.'.
 
 Example 1:
 Input:
@@ -20,42 +21,23 @@ Input:
   [".",".",".","4","1","9",".",".","5"],
   [".",".",".",".","8",".",".","7","9"]
 ]
-Output: true
-
-
-Example 2:
-Input:
-[
-  ["8","3",".",".","7",".",".",".","."],
-  ["6",".",".","1","9","5",".",".","."],
-  [".","9","8",".",".",".",".","6","."],
-  ["8",".",".",".","6",".",".",".","3"],
-  ["4",".",".","8",".","3",".",".","1"],
-  ["7",".",".",".","2",".",".",".","6"],
-  [".","6",".",".",".",".","2","8","."],
-  [".",".",".","4","1","9",".",".","5"],
-  [".",".",".",".","8",".",".","7","9"]
-]
-Output: false
-Explanation: Same as Example 1, except with the 5 in the top left corner being
-    modified to 8. Since there are two 8's in the top left 3x3 sub-box, it is invalid.
+Output: [filled-in puzzle]
 
 
 Note:
-    A Sudoku board (partially filled) could be valid but is not necessarily solvable.
-    Only the filled cells need to be validated according to the mentioned rules.
     The given board contain only digits 1-9 and the character '.'.
+    You may assume that the given Sudoku puzzle will have a single unique solution.
     The given board size is always 9x9.
 
 """
-
-# Check for number that isn't between 1 and 9.
 
 
 class SudokuUnit:
     def __init__(self):
         # https://docs.python.org/3/tutorial/datastructures.html#sets
         self.potentials = set("123456789")
+        # self.potentials = dict([("1", 0), ("2", 0), ("3", 0), ("4", 0), ("5", 0), 
+        #                         ("6", 0), ("7", 0), ("8", 0), ("9", 0)])
         self.Cells = []
 
     def add_cell(self, Cell):
@@ -125,7 +107,9 @@ class Cell():
                 val_to_assign = self.potentials.pop()
                 self.set_val(val_to_assign)
                 # set_val will update parents
-
+            elif len(self.potentials) == 0:
+                pass
+                # need to return something that indicates an upstream guess was unsuccessful
 
 class FullBoard():
     def __init__(self, board):
@@ -179,8 +163,8 @@ class FullBoard():
         return self.all_blocks.get(block_num)
 
     def get_cell(self, row_num, col_num):
-        cell_num = 9 * row_num + col_num
-        return self.all_cells.get(cell_num)
+        cell_index = 9 * row_num + col_num
+        return self.all_cells.get(cell_index)
 
     def add_val(self, row_num, col_num, str_value):
 
@@ -201,7 +185,7 @@ class Solution:
         Board = FullBoard(board)
 
         # Enter each value, with the objects updating each other as it goes.
-        # Array can change during each iteration, so can't load intiial state
+        # Array can change during each iteration, so can't load initial state
         # of row or col into mem and use enumerate. Must re-index array each time.
         row_num = 0
         while True:
@@ -219,6 +203,21 @@ class Solution:
             if row_num > 8:
                 break
 
+
+##### TEST #####
+
+import LC0037_SudokuSolve_puzzles as puzzles
+mysol = Solution()
+
+for row in puzzles.input_board2:
+    print(row)
+
+mysol.solveSudoku(puzzles.input_board2)
+
+print("\n\tDeterministic Solution First-pass\n\t->\n")
+for row in puzzles.input_board2:
+    print(row)
+
 # works on test case 1 but not 2. Only solves part of the board.
 
 # Need to add code to keep track of when a cell becomes the only one in a unit
@@ -230,6 +229,3 @@ class Solution:
 # This does not solve board 2 though. Still need a mechanism to make and validate
 # value guesses once board becomes (seemingly) non-determinant. Or need more
 # insight into how to solve boards that reach this state.
-
-
-import LC0037_SudokuSolve_puzzles as puzzles
