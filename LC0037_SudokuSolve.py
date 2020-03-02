@@ -66,27 +66,39 @@ class SudokuUnit:
         # return dict keys as a set
         return set(self.potentials.keys())
 
-    def remove_cell_mem(self, Cell):
+    def remove_cell_mem(self, Cell, pot_val):
+        # Removes Cell membership in a given potential value set.
+        # Checks if any values have only one member or no members after update.
 
-        for pot_val in self.potentials:
-            if Cell in self.potentials[pot_val]:
-                self.potentials[pot_val].discard(Cell)
-                if len(self.potentials[pot_val]) == 1:
-                    # propagate value update
-                    Cell.set_val(pot_val)
-                elif len(self.potentials[pot_val]) == 0:
-                    # bad guess somewhere
-                    # how to indicate a bad DFS branch?
-                    # need it here and where else?
-                    pass
+        if pot_val in self.potentials:
+            self.potentials[pot_val].discard(Cell)
+
+            if len(self.potentials[pot_val]) == 1:
+                # propagate value update
+                RemainingCell = self.potentials[pot_val].pop()
+                RemainingCell.set_val(pot_val)
+            elif len(self.potentials[pot_val]) == 0:
+                # bad guess somewhere
+                # how to indicate a bad DFS branch?
+                # need it here and where else?
+                pass
 
     def update_potentials(self, val_to_remove, Cell):
         # self.potentials = self.potentials - set(val_to_remove)
 
-        del self.potentials[val_to_remove]
+        # Completely remove potential value from dictionary, along w/ any members.
+        if val_to_remove in self.potentials:
+            del self.potentials[val_to_remove]
 
         # need to remove cell's membership in any other potential sets as well.
-        self.remove_cell_mem(Cell)
+        for pot_val in self.potentials:
+            if Cell in self.potentials[pot_val]:
+                # self.remove_cell_mem(Cell, pot_val)
+
+                self.potentials[pot_val].discard(Cell)
+                # Don't need to test if any sets have become length one because
+                # that happens as byproduct of Cell.update_potentials(val_to_remove)
+                # below
         # is anything else needed to propagate?
 
         # update children w/ new potentials.
@@ -120,6 +132,15 @@ class Cell():
         else:
             self.value = False
             self.potentials = ParentRow.get_potentials() & ParentCol.get_potentials() & ParentBlock.get_potentials()
+
+            # Is this needed to assign values during initial traversal?
+            # Has been working without it but it must just be because every
+            # cell gets touched afterward by update_potentials() propagating
+            # from given values getting set.
+            # if len(self.potentials) == 1:
+            #     # When there's only one possible num, give cell this val.
+            #     val_to_assign = self.potentials.pop()
+            #     self.set_val(val_to_assign)
 
     def get_row_num(self):
         return self.row_num
@@ -155,6 +176,11 @@ class Cell():
             elif len(self.potentials) == 0:
                 pass
                 # need to return something that indicates an upstream guess was unsuccessful
+
+        # Remove Cell from value set in each parents' data struct.
+        for Parent in self.Parents:
+            Parent.remove_cell_mem(self, val_to_remove)
+
 
 class FullBoard():
     def __init__(self, board):
@@ -259,7 +285,7 @@ for row in puzzles.input_board2:
 
 mysol.solveSudoku(puzzles.input_board2)
 
-print("\n\tDeterministic Solution First-pass\n\t->\n")
+print("\n\tDeterministic Solution First- and Second-pass\n\t->\n")
 for row in puzzles.input_board2:
     print(row)
 
